@@ -19,40 +19,34 @@ var stringifyJSON = function(obj) {
   if(Array.isArray(obj)){
     var arrayString = "";
     var arr = obj.slice();
-    var arrOut = recursArray(arr, arrayString);
-    return "[" + arrOut + "]";
+    recursArray(arr);
+    return "[" + arrayString + "]";
   }
   
   if(typeof obj === 'boolean'){
     return obj.toString();
   }
-  // your code goes here
+  
+  function recursArray(arr){
+  
+	  if(arr.length){
+		var s = arr.shift();
+		
+		if(Array.isArray(s)){
+		  var nest = s.slice();
+		  stringifyJSON(nest);
+		}
+	
+		if(typeof s === 'string'){
+	      arrayString = arrayString + ",\"" + s + "\"";
+		}
+		else{
+		  arrayString = arrayString + "," + s;
+	    }
+		
+		recursArray(arr, true);
+	  }
+	};
 };
 
-var recursArray = function(arr, str){
-  
-  if(arr.length){
-    var s = arr.shift();
-    if(typeof s === 'string'){
-      str = str + "\"" + s + "\"";
-    }
-    else{
-      str = str + s;
-    }
-    
-  /*console.log('meal before bite:', meal);
-  console.log('now eating', meal.pop());
-  if(meal.length){
-    eat(meal);
-  } else {
-    console.log('done with the meal!');*/
-    recursArray(arr, str);
-  }
-  
-  if(str.length > 0){
-    str = str.splice(str.length - 1, 1);
-  }
-  
-  
-  return str;
-}
+
