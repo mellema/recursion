@@ -23,6 +23,13 @@ var stringifyJSON = function(obj) {
     return "[" + arrayString.slice(1) + "]";
   }
   
+  if(!(Array.isArray(obj)) && typeof obj === 'object'){
+    var a = Object.keys(obj);
+    if(a.length < 1){
+      return "{}";
+    }
+  }
+  
   if(typeof obj === 'boolean'){
     return obj.toString();
   }
@@ -34,11 +41,16 @@ var stringifyJSON = function(obj) {
 		
 		if(Array.isArray(s)){
 		  var nest = s.slice();
-		  stringifyJSON(nest);
+		  s = stringifyJSON(nest);
 		}
 	
 		if(typeof s === 'string'){
-	      arrayString = arrayString + ",\"" + s + "\"";
+		  if(s.charAt(0) !== '['){
+	        arrayString = arrayString + ",\"" + s + "\"";
+	      }
+	      else{
+	        arrayString = arrayString + "," + s;
+	      }
 		}
 		else{
 		  arrayString = arrayString + "," + s;
@@ -46,6 +58,10 @@ var stringifyJSON = function(obj) {
 		
 		recursArray(arr, true);
 	  }
+	};
+	
+	function recursObject(o){
+	
 	};
 };
 
