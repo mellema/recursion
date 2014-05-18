@@ -20,7 +20,7 @@ var stringifyJSON = function(obj) {
     var arrayString = "";
     var arr = obj.slice();
     recursArray(arr);
-    return "[" + arrayString + "]";
+    return "[" + arrayString.slice(1) + "]";
   }
   
   if(typeof obj === 'boolean'){
