@@ -24,15 +24,32 @@ var stringifyJSON = function(obj) {
   }
   
   if(!(Array.isArray(obj)) && typeof obj === 'object'){
-    var a = Object.keys(obj);
-    if(a.length < 1){
-      return "{}";
+  
+    var objectString = "";
+    
+    var o = {};
+    
+    for (var item in obj) {
+      if (obj.hasOwnProperty(item)){
+        o[item] = obj[item];
+      }
     }
+    
+    recursObject(o);
+    return "{" + objectString.slice(1) + "}";
   }
   
   if(typeof obj === 'boolean'){
     return obj.toString();
   }
+  
+  function recursObject(ob){
+    var z = 0;
+    for(var item in ob){
+      objectString = objectString + ",\"" + item + "\": \"" + ob[item] + "\"";
+    }
+  
+  };
   
   function recursArray(arr){
   
