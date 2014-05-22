@@ -46,7 +46,12 @@ var stringifyJSON = function(obj) {
   function recursObject(ob){
     var z = 0;
     for(var item in ob){
-      objectString = objectString + ",\"" + item + "\": \"" + ob[item] + "\"";
+      if(ob[item] && typeof ob[item] !== 'boolean'){
+        objectString = objectString + ",\"" + item + "\":\"" + ob[item] + "\"";
+      }
+      else{
+        objectString = objectString + ",\"" + item + "\":" + ob[item];
+      }
     }
   
   };
@@ -77,9 +82,6 @@ var stringifyJSON = function(obj) {
 	  }
 	};
 	
-	function recursObject(o){
-	
-	};
 };
 
 
