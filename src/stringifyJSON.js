@@ -3,85 +3,85 @@
 
 // but you don't so you're going to write it from scratch:
 var stringifyJSON = function(obj) {
+
+  var jsonStr = "";
   
   if(typeof obj === 'number'){
-    return obj.toString();
+    jsonStr = jsonStr + obj.toString();
   }
   
   if(obj === null){
-    return 'null';
+    jsonStr = jsonStr + 'null';
   }
   
-  if(typeof obj === 'string'){
-    return "\"" + obj + "\"";
+  if(typeof obj === 'boolean'){
+    jsonStr = jsonStr + obj.toString();
   }
+  
+  
+  if(typeof obj === 'string'){
+    jsonStr = jsonStr + "\"" + obj + "\"";
+  }
+  
   
   if(Array.isArray(obj)){
     var arrayString = "";
     var arr = obj.slice();
-    recursArray(arr);
-    return "[" + arrayString.slice(1) + "]";
-  }
-  
-  if(!(Array.isArray(obj)) && typeof obj === 'object'){
-  
-    var objectString = "";
     
-    var o = {};
+    jsonStr = jsonStr + "[";
     
-    for (var item in obj) {
-      if (obj.hasOwnProperty(item)){
-        o[item] = obj[item];
+    if(arr.length > 0){
+      for(var a = 0; a < arr.length; a++){
+        jsonStr = jsonStr + stringifyJSON(arr[a]) + ",";
       }
+      jsonStr = jsonStr.slice(0, jsonStr.length - 1);
     }
+    jsonStr = jsonStr + "]";
+  }
+  
+  if(!(Array.isArray(obj)) && typeof obj === 'object' && obj){
+    jsonStr = jsonStr + "{";
     
-    recursObject(o);
-    return "{" + objectString.slice(1) + "}";
-  }
-  
-  if(typeof obj === 'boolean'){
-    return obj.toString();
-  }
-  
-  function recursObject(ob){
-    var z = 0;
-    for(var item in ob){
-      if(ob[item] && typeof ob[item] !== 'boolean'){
-        objectString = objectString + ",\"" + item + "\":\"" + ob[item] + "\"";
+    for(var item in obj){
+      if(typeof obj[item] === 'function' || typeof obj[item] === 'undefined'){
+      var u = 2;
+      }
+      else if(obj[item] && typeof obj[item] === 'object'){
+        jsonStr = jsonStr + "\"" + item + "\":" + stringifyJSON(obj[item]) + ",";
+      }
+      else if(obj[item] && typeof obj[item] !== 'boolean'){
+        jsonStr =  jsonStr + "\"" + item + "\":\"" + obj[item] + "\",";
       }
       else{
-        objectString = objectString + ",\"" + item + "\":" + ob[item];
-      }
+        jsonStr =  jsonStr + "\"" + item + "\":" + obj[item] + ",";
+      }  
     }
+    
+    jsonStr = jsonStr + "}";
+    
+    if(jsonStr.charAt(jsonStr.length - 1) === "}" && jsonStr.charAt(jsonStr.length - 2) === ","){
+      jsonStr = jsonStr.slice(0, jsonStr.length - 2) + jsonStr.slice(jsonStr.length - 1);
+    }
+    
+    /*if(jsonStr.charAt(jsonStr.length - 1) === "{"){
+      jsonStr = jsonStr + "},";
+    }
+    if(jsonStr.charAt(jsonStr.length - 1) === ","){
+      jsonStr = jsonStr.slice(0, jsonStr.length - 1) + "}";
+    }/*
+    else{  
+      jsonStr = jsonStr.slice(0, jsonStr.length) + "}";
+    }  
+    else{
+      jsonStr = jsonStr + "}";
+    }*/
+  }
+  /*if(jsonStr.charAt(jsonStr.length - 1) === ","){
+    jsonStr = jsonStr.slice(0, jsonStr.length - 1)
+  }*/
   
-  };
   
-  function recursArray(arr){
-  
-	  if(arr.length){
-		var s = arr.shift();
-		
-		if(Array.isArray(s)){
-		  var nest = s.slice();
-		  s = stringifyJSON(nest);
-		}
-	
-		if(typeof s === 'string'){
-		  if(s.charAt(0) !== '['){
-	        arrayString = arrayString + ",\"" + s + "\"";
-	      }
-	      else{
-	        arrayString = arrayString + "," + s;
-	      }
-		}
-		else{
-		  arrayString = arrayString + "," + s;
-	    }
-		
-		recursArray(arr, true);
-	  }
-	};
-	
+  return jsonStr;
 };
 
 
