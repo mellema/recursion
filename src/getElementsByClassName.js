@@ -6,20 +6,44 @@
 // But instead we're going to implement it from scratch:
 var getElementsByClassName = function(className){
   // your code here
+  
   var arr = [];
+  
   var $body = $(document.body);
-  //var $kids = ($body).children();
-
   
   $($body).each(function(index, element){
     if(element.classList.contains(className)){
       arr.push(element);
     }
-    if(element.childNodes){
-      var check = "yes";
+    if(element.hasChildNodes()){
+      var $element = $(element.childNodes);
+      $($element).each(function(ind, elem){
+      
+        if(elem.classList && elem.classList.contains(className)){
+          arr.push(elem);
+        }
+        if(elem.hasChildNodes()){
+          getElemsByCName(className, arr, elem);
+        }  
+      });
     }
-    //arr = arr.concat(getElementsByClassName(className));
   });
+  
+  function getElemsByCName(cName, array1, el){
+    if(el.classList.contains(cName)){
+      array1.push(el);
+    }
+    if(el.hasChildNodes()){
+      var $el = $(el.childNodes);
+      $($el).each(function(i, e){
+        if(e.hasChildNodes()){
+          getElemsByCName(cName, array1, e);
+        }
+      });
+    }
+  }
+  
+  
   
   return arr;
 };
