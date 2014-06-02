@@ -31,7 +31,6 @@ var stringifyJSON = function(obj) {
         jsonString += '"' + item + '":' + stringifyJSON(obj[item]) + ',';
       }
     }
-
     return '{' + jsonString.slice(0, jsonString.length - 1) + '}';
   }
 };
