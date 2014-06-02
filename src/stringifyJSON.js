@@ -3,85 +3,37 @@
 
 // but you don't so you're going to write it from scratch:
 var stringifyJSON = function(obj) {
+  var jsonString;
+  var i;
 
-  var jsonStr = "";
-  
-  if(typeof obj === 'number'){
-    jsonStr = jsonStr + obj.toString();
-  }
-  
-  if(obj === null){
-    jsonStr = jsonStr + 'null';
-  }
-  
-  if(typeof obj === 'boolean'){
-    jsonStr = jsonStr + obj.toString();
-  }
-  
-  
-  if(typeof obj === 'string'){
-    jsonStr = jsonStr + "\"" + obj + "\"";
-  }
-  
-  
-  if(Array.isArray(obj)){
-    var arrayString = "";
-    var arr = obj.slice();
-    
-    jsonStr = jsonStr + "[";
-    
-    if(arr.length > 0){
-      for(var a = 0; a < arr.length; a++){
-        jsonStr = jsonStr + stringifyJSON(arr[a]) + ",";
+  if (typeof obj === 'string') {
+    return '"' + obj + '"';
+  } else if (typeof obj === 'number' || typeof obj === 'boolean') {
+    return obj.toString();
+  } else if (obj === null) {
+    return 'null';
+  } else if (Array.isArray(obj)) {
+    jsonString = '';
+    for(i = 0; i < obj.length; i++){
+      if (i === obj.length - 1) {
+        jsonString += stringifyJSON(obj[i]);
+      } else {
+        jsonString += stringifyJSON(obj[i]) + ',';
       }
-      jsonStr = jsonStr.slice(0, jsonStr.length - 1);
     }
-    jsonStr = jsonStr + "]";
-  }
-  
-  if(!(Array.isArray(obj)) && typeof obj === 'object' && obj){
-    jsonStr = jsonStr + "{";
-    
+    return '[' + jsonString + ']';
+  } else if (typeof obj === 'object') {
+    jsonString = '';
     for(var item in obj){
       if(typeof obj[item] === 'function' || typeof obj[item] === 'undefined'){
-      var u = 2;
+        return '{}';
+      }else{
+        jsonString += '"' + item + '":' + stringifyJSON(obj[item]) + ',';
       }
-      else if(obj[item] && typeof obj[item] === 'object'){
-        jsonStr = jsonStr + "\"" + item + "\":" + stringifyJSON(obj[item]) + ",";
-      }
-      else if(obj[item] && typeof obj[item] !== 'boolean'){
-        jsonStr =  jsonStr + "\"" + item + "\":\"" + obj[item] + "\",";
-      }
-      else{
-        jsonStr =  jsonStr + "\"" + item + "\":" + obj[item] + ",";
-      }  
     }
-    
-    jsonStr = jsonStr + "}";
-    
-    if(jsonStr.charAt(jsonStr.length - 1) === "}" && jsonStr.charAt(jsonStr.length - 2) === ","){
-      jsonStr = jsonStr.slice(0, jsonStr.length - 2) + jsonStr.slice(jsonStr.length - 1);
-    }
-    
-    /*if(jsonStr.charAt(jsonStr.length - 1) === "{"){
-      jsonStr = jsonStr + "},";
-    }
-    if(jsonStr.charAt(jsonStr.length - 1) === ","){
-      jsonStr = jsonStr.slice(0, jsonStr.length - 1) + "}";
-    }/*
-    else{  
-      jsonStr = jsonStr.slice(0, jsonStr.length) + "}";
-    }  
-    else{
-      jsonStr = jsonStr + "}";
-    }*/
+
+    return '{' + jsonString.slice(0, jsonString.length - 1) + '}';
   }
-  /*if(jsonStr.charAt(jsonStr.length - 1) === ","){
-    jsonStr = jsonStr.slice(0, jsonStr.length - 1)
-  }*/
-  
-  
-  return jsonStr;
 };
 
 
